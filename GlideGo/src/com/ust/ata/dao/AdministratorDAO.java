@@ -51,7 +51,8 @@ public class AdministratorDAO implements Administrator {
         System.out.println("Vehicle not found.");
         return null;
     }
-
+    
+      
     @Override
     public boolean modifyVehicle(VehicleBean vehicleBean) {
         for (int i = 0; i < vehicleList.size(); i++) {

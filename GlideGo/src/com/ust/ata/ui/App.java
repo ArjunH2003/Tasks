@@ -7,13 +7,20 @@ package com.ust.ata.ui;
 	import com.ust.ata.dao.*;
 	import com.ust.ata.service.*;
 
+	import java.util.Scanner;
+
 	public class App {
 
 	    public static void main(String[] args) {
 	        Scanner sc = new Scanner(System.in);
 
+	        
 	        Administrator admin = new AdministratorDAO();
-	        Customer customer = new CustomerDAO();
+	        //Customer customer = new CustomerDAO();
+
+	        
+	        String adminUsername = "admin";
+	        String adminPassword = "admin";
 
 	        System.out.println("======================================");
 	        System.out.println("               GlideGo                ");
@@ -28,11 +35,30 @@ package com.ust.ata.ui;
 	            int choice = sc.nextInt();
 
 	            if (choice == 1) {
-	                adminMenu(admin, sc);
-	            } else if (choice == 2) {
-	                customerMenu(customer, sc);
+	                
+	                boolean loggedIn = false;
+
+	               
+	                while (!loggedIn) {
+	                    System.out.print("Enter Admin Username: ");
+	                    String username = sc.next();
+	                    System.out.print("Enter Admin Password: ");
+	                    String password = sc.next();
+
+	                   
+	                    if (username.equals(adminUsername) && password.equals(adminPassword)) {
+	                        System.out.println("Login successful!");
+	                        loggedIn = true;
+	                        adminMenu(admin, sc);  
+	                    } else {
+	                        System.out.println("Invalid username or password. Please try again.");
+	                    }
+	                }
+//	            } else if (choice == 2) {
+//	                
+//	                customerMenu(customer, sc);
 	            } else {
-	                System.out.println("Thank you! Exiting system...");
+	                System.out.println("Exiting system...");
 	                break;
 	            }
 	        }
@@ -41,20 +67,24 @@ package com.ust.ata.ui;
 	    }
 
 
+
 	    public static void adminMenu(Administrator admin, Scanner sc) {
 	        while (true) {
 	            System.out.println("\n====== ADMIN MENU ======");
 	            System.out.println("1. Add Vehicle");
-	            System.out.println("2. View Vehicle");
-	            System.out.println("3. Delete Vehicle");
-	            System.out.println("4. Add Route");
-	            System.out.println("5. View Route");
-	            System.out.println("6. Back to Main Menu");
+	            System.out.println("2. Delete Vehicle");
+	            System.out.println("3. View Vehicle");
+	            System.out.println("4. Modify Vehicle");
+	            System.out.println("5. Add Route");
+	            System.out.println("6. Delete Route");
+	            System.out.println("7. View Route");
+	            System.out.println("8. Modify Route");
+	            System.out.println("9. Back to Main Menu");
 	            System.out.print("Enter choice: ");
-	            int ch = sc.nextInt();
+	            String ch = sc.next();
 
 	            switch (ch) {
-	                case 1:
+	                case "AD-001":
 	                    VehicleBean v = new VehicleBean();
 	                    sc.nextLine();
 	                    System.out.print("Enter Vehicle ID: ");
@@ -71,15 +101,8 @@ package com.ust.ata.ui;
 	                    v.setFarePerKM(sc.nextDouble());
 	                    admin.addVehicle(v);
 	                    break;
-
-	                case 2:
-	                    sc.nextLine();
-	                    System.out.print("Enter Vehicle ID: ");
-	                    String vid = sc.nextLine();
-	                    admin.viewVehicle(vid);
-	                    break;
-
-	                case 3:
+	                    
+	                case "AD-002":
 	                    sc.nextLine();
 	                    System.out.print("Enter Vehicle ID to delete: ");
 	                    String delId = sc.nextLine();
@@ -88,7 +111,23 @@ package com.ust.ata.ui;
 	                    admin.deleteVehicle(list);
 	                    break;
 
-	                case 4:
+	                case "AD-003":
+	                    sc.nextLine();
+	                    System.out.print("Enter Vehicle ID: ");
+	                    String vid = sc.nextLine();
+	                    admin.viewVehicle(vid);
+	                    break;
+	                    
+	                    
+	                case "AD-004":
+	                	VehicleBean v1 = new VehicleBean();
+	                    sc.nextLine();
+	                    System.out.print("Enter new Vehicle ID: ");
+	                    v1.setVehicleID(sc.nextLine());
+	                    admin.modifyVehicle(v1);
+
+
+	                case "AD-005":
 	                    RouteBean route = new RouteBean();
 	                    sc.nextLine();
 	                    System.out.print("Enter Route ID: ");
@@ -103,15 +142,34 @@ package com.ust.ata.ui;
 	                    route.setTravelDuration(sc.nextInt());
 	                    admin.addRoute(route);
 	                    break;
+	                    
+	                case "AD-006":
+	                    sc.nextLine();
+	                    System.out.print("Enter Route ID to delete: ");
+	                    String delrouteId = sc.nextLine();
+	                    ArrayList<String> list1 = new ArrayList<>();
+	                    list1.add(delrouteId);
+	                    admin.deleteRoute(list1);
+	                    break;
 
-	                case 5:
+	                case "AD-007":
 	                    sc.nextLine();
 	                    System.out.print("Enter Route ID: ");
 	                    String rid = sc.nextLine();
 	                    admin.viewRoute(rid);
 	                    break;
+	                    
+	                case "AD-008":
+	                	RouteBean route1 = new RouteBean();
+	                    sc.nextLine();
+	                    System.out.print("Enter new Vehicle ID: ");
+	                    route1.setRouteID(sc.nextLine());
+	                    admin.modifyRoute(route1);
 
-	                case 6:
+	                    
+	                
+
+	                case "a":
 	                    return;
 
 	                default:
@@ -119,81 +177,6 @@ package com.ust.ata.ui;
 	            }
 	        }
 	    }
-
-	   
-	    public static void customerMenu(Customer customer, Scanner sc) {
-	        while (true) {
-	            System.out.println("\n====== CUSTOMER MENU ======");
-	            System.out.println("1. View Vehicles by Type");
-	            System.out.println("2. View Vehicles by Seats");
-	            System.out.println("3. View All Routes");
-	            System.out.println("4. Book Vehicle");
-	            System.out.println("5. Cancel Booking");
-	            System.out.println("6. View Booking Details");
-	            System.out.println("7. Back to Main Menu");
-	            System.out.print("Enter choice: ");
-	            int ch = sc.nextInt();
-
-	            switch (ch) {
-	                case 1:
-	                    sc.nextLine();
-	                    System.out.print("Enter Vehicle Type (AC/NonAC): ");
-	                    String type = sc.nextLine();
-	                    customer.viewVehiclesByType(type);
-	                    break;
-
-	                case 2:
-	                    System.out.print("Enter seating capacity: ");
-	                    int seats = sc.nextInt();
-	                    customer.viewVehicleBySeats(seats);
-	                    break;
-
-	                case 3:
-	                    customer.viewAllRoutes();
-	                    break;
-
-	                case 4:
-	                    ReservationBean rb = new ReservationBean();
-	                    sc.nextLine();
-	                    System.out.print("Enter Reservation ID: ");
-	                    rb.setReservationID(sc.nextLine());
-	                    System.out.print("Enter User ID: ");
-	                    rb.setUserID(sc.nextLine());
-	                    System.out.print("Enter Vehicle ID: ");
-	                    rb.setVehicleID(sc.nextLine());
-	                    System.out.print("Enter Route ID: ");
-	                    rb.setRouteID(sc.nextLine());
-	                    System.out.print("Enter Journey Date (dd-mm-yyyy): ");
-	                    rb.setJourneyDate(sc.nextLine());
-	                    rb.setBookingStatus("Confirmed");
-	                    rb.setTotalFare(500.0);
-	                    customer.bookVehicle(rb);
-	                    break;
-
-	                case 5:
-	                    sc.nextLine();
-	                    System.out.print("Enter User ID: ");
-	                    String uid = sc.nextLine();
-	                    System.out.print("Enter Reservation ID: ");
-	                    String resid = sc.nextLine();
-	                    customer.cancelBooking(uid, resid);
-	                    break;
-
-	                case 6:
-	                    sc.nextLine();
-	                    System.out.print("Enter Reservation ID: ");
-	                    String viewid = sc.nextLine();
-	                    customer.printBookingDetails(viewid);
-	                    break;
-
-	                case 7:
-	                    return;
-
-	                default:
-	                    System.out.println("Invalid choice! Try again.");
-	            }
-	        }
-	    }
-	}
-
+	    
+	}        // **
 
